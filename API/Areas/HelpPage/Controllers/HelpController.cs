@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using System.Web.Http;
 using System.Web.Mvc;
 using API.Areas.HelpPage.ModelDescriptions;
@@ -27,8 +28,16 @@ namespace API.Areas.HelpPage.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.DocumentationProvider = Configuration.Services.GetDocumentationProvider();
-            return View(Configuration.Services.GetApiExplorer().ApiDescriptions);
+            bool excludeHelpPage = ConfigurationManager.AppSettings["ExcludeHelpPage"] == "true";
+            if (excludeHelpPage)
+            {
+                return Redirect("/swagger");
+            }
+            else
+            {
+                ViewBag.DocumentationProvider = Configuration.Services.GetDocumentationProvider();
+                return View(Configuration.Services.GetApiExplorer().ApiDescriptions);
+            }
         }
 
         public ActionResult Api(string apiId)

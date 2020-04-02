@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,9 +11,17 @@ namespace API.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            bool excludeHelpPage = ConfigurationManager.AppSettings["ExcludeHelpPage"] == "true";
+            if (excludeHelpPage)
+            {
+                return Redirect("/swagger");
+            }
+            else
+            {
+                ViewBag.Title = "Home Page";
 
-            return View();
+                return View();
+            }
         }
     }
 }
